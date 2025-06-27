@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyPhone - Android Device Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-mobile-alt"></i> PyPhone</h1>
+            <div class="tabs">
+                <button id="tab-devices" class="tab-button active">
+                    <i class="fas fa-tablet-alt"></i> Thiết bị
+                </button>
+                <button id="tab-scripts" class="tab-button">
+                    <i class="fas fa-code"></i> Kịch bản
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Devices Tab -->
+            <div id="devices-tab" class="tab-content active">
+                <div class="toolbar">
+                    <button id="refresh-devices" class="button primary">
+                        <i class="fas fa-sync-alt"></i> Cập nhật danh sách thiết bị
+                    </button>
+                </div>
+
+                <div id="devices-list" class="devices-container">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách thiết bị...
+                    </div>
+                </div>
+
+                <div id="device-details" class="device-details hidden">
+                    <div class="device-header">
+                        <button id="back-to-devices" class="button secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </button>
+                        <h2 id="device-title">Chi tiết thiết bị</h2>
+                    </div>
+
+                    <div class="info-section">
+                        <div id="device-info-content"></div>
+                    </div>
+
+                    <div class="device-actions">
+                        <h3>Thao tác</h3>
+                        <div class="action-buttons">
+                            <button data-action="home" class="button action">
+                                <i class="fas fa-home"></i> Home
+                            </button>
+                            <button data-action="back" class="button action">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button data-action="task" class="button action">
+                                <i class="fas fa-tasks"></i> Recent Apps
+                            </button>
+                            <button data-action="screenshot" class="button action primary">
+                                <i class="fas fa-camera"></i> Chụp màn hình
+                            </button>
+                        </div>
+
+                        <div class="xpath-section">
+                            <h3>Thao tác XPath</h3>
+                            <div class="input-group">
+                                <input type="text" id="xpath-input" placeholder="Nhập biểu thức XPath">
+                                <button id="check-xpath" class="button secondary">
+                                    <i class="fas fa-search"></i> Kiểm tra
+                                </button>
+                                <button id="click-xpath" class="button primary">
+                                    <i class="fas fa-mouse-pointer"></i> Click
+                                </button>
+                            </div>
+                            <div id="xpath-result" class="result-container"></div>
+                        </div>
+                    </div>
+
+                    <div id="screenshot-container" class="screenshot-container hidden">
+                        <img id="device-screenshot" class="device-screenshot" src="">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scripts Tab -->
+            <div id="scripts-tab" class="tab-content">
+                <div class="scripts-container">
+                    <div class="scripts-list-section">
+                        <h2>Kịch bản có sẵn</h2>
+                        <div class="toolbar">
+                            <button id="refresh-scripts" class="button primary">
+                                <i class="fas fa-sync-alt"></i> Cập nhật danh sách
+                            </button>
+                        </div>
+                        <div id="scripts-list" class="list-container">
+                            <div class="loading">
+                                <i class="fas fa-spinner fa-spin"></i> Đang tải kịch bản...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="script-execution-section">
+                        <h2>Chạy kịch bản</h2>
+                        <div id="script-info" class="info-box">
+                            <div class="placeholder">Chọn một kịch bản để xem chi tiết</div>
+                        </div>
+
+                        <div id="script-config-section" class="config-section hidden">
+                            <h3>Cấu hình kịch bản</h3>
+                            <div id="script-config" class="config-container"></div>
+
+                            <div id="config-controls" class="config-controls hidden">
+                                <button id="reset-config" class="button secondary">
+                                    <i class="fas fa-undo"></i> Khôi phục mặc định
+                                </button>
+                                <button id="save-config" class="button primary">
+                                    <i class="fas fa-save"></i> Lưu cấu hình
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="device-selection">
+                            <h3>Chọn thiết bị mục tiêu</h3>
+                            <div class="toolbar">
+                                <button id="select-all-devices" class="button secondary">
+                                    <i class="fas fa-check-square"></i> Chọn tất cả
+                                </button>
+                                <button id="deselect-all-devices" class="button secondary">
+                                    <i class="fas fa-square"></i> Bỏ chọn tất cả
+                                </button>
+                            </div>
+                            <div id="device-selection-list" class="list-container">
+                                <div class="placeholder">Không có thiết bị nào khả dụng</div>
+                            </div>
+                        </div>
+
+                        <div class="execution-controls">
+                            <button id="start-script" class="button primary" disabled>
+                                <i class="fas fa-play"></i> Bắt đầu kịch bản
+                            </button>
+                            <button id="stop-script" class="button danger" disabled>
+                                <i class="fas fa-stop"></i> Dừng kịch bản
+                            </button>
+                        </div>
+
+                        <div class="execution-logs">
+                            <h3>Log thực thi</h3>
+                            <div class="log-header">
+                                <select id="log-device-selector">
+                                    <option value="" disabled selected>Chọn thiết bị</option>
+                                </select>
+                                <button id="clear-logs" class="button secondary">
+                                    <i class="fas fa-trash"></i> Xoá log
+                                </button>
+                            </div>
+                            <div id="script-logs" class="logs-container">
+                                <div class="placeholder">Chưa có log</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="status-bar">
+                <div id="status-message">Sẵn sàng</div>
+                <div id="status-devices">Không có thiết bị nào được kết nối</div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
